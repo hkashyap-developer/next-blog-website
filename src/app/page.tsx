@@ -10,9 +10,7 @@ const EVENTS_QUERY = `*[_type == "event"]{_id, name, slug, date}|order(date desc
 
 export default async function IndexPage() {
   const events = await sanityFetch<SanityDocument[]>(
-    {query: EVENTS_QUERY},
-    {},
-    { next : { revalidate : 1 }},
+    {query: EVENTS_QUERY}
   );
 
   return (
@@ -42,5 +40,3 @@ export default async function IndexPage() {
   );
 }
 
-
-export const dynamic = "force-dynamic";
