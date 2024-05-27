@@ -5,6 +5,9 @@ import { sanityFetch } from "../sanity/client";
 
 const EVENTS_QUERY = `*[_type == "event"]{_id, name, slug, date}|order(date desc)`;
 
+export const dynamic = "force-dynamic";
+
+
 export default async function IndexPage() {
   const events = await sanityFetch<SanityDocument[]>({query: EVENTS_QUERY});
 
