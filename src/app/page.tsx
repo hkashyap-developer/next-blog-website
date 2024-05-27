@@ -1,34 +1,36 @@
-import Image from "next/image";
+import Link from "next/link";
+import { SanityDocument } from "next-sanity";
 
-import { client } from "@/utils/configSanity"
+import { sanityFetch } from "../sanity/client";
 
+const EVENTS_QUERY = `*[_type == "event"]{_id, name, slug, date}|order(date desc)`;
 
-interface iPortfolio {
-  _id: string; 
-  title: string; 
-  _createdAt: string; 
-}
-
-async function getData() {
-  const query =  `*[_type== 'portfolio']`;
-  const data = await client.fetch(query);
-  return data as iPortfolio[]; 
-}
-
-export default async function Home() {
-
-  const data = (await getData()) as iPortfolio[];
-  console.log(data); 
+export default async function IndexPage() {
+  const events = await sanityFetch<SanityDocument[]>({query: EVENTS_QUERY});
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      test1
-      {data?.map((item) => (
-        <div key="{item?._id}">
-          <h1>{item?.name}</h1>
-          </div>
-      ))}
-      test2
+    <main className="flex bg-gray-100 min-h-screen flex-col p-24 gap-12">
+      <h1 className="text-4xl font-bold tracking-tighter">
+        Events
+      </h1>
+      <ul className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+        {events.map((event) => (
+          <li
+            className="bg-white p-4 rounded-lg"
+            key={event._id}
+          >
+            <Link
+              className="hover:underline"
+              href={`/events/${event.slug.current}`}
+            >
+              <h2 className="text-xl font-semibold">{event?.name}</h2>
+              <p className="text-gray-500">
+                {new Date(event?.date).toLocaleDateString()}
+              </p>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }
