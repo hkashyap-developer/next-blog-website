@@ -5,10 +5,7 @@ import { sanityFetch } from "../sanity/client";
 
 const EVENTS_QUERY = `*[_type == "event"]{_id, name, slug, date}|order(date desc)`;
 
-export default async function IndexPage() {
-  const events = await sanityFetch<SanityDocument[]>(
-    {query: EVENTS_QUERY}
-  );
+
 
   return (
     <main className="flex bg-gray-100 min-h-screen flex-col p-24 gap-12">
